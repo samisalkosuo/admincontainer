@@ -1,0 +1,51 @@
+= admin-container
+
+General purpose container mainly for admin purposes. The idea of this container is to provide a set of tools that can be used using Linux, Windows or Mac workstation without installing the tools natively. 
+
+The container is especially useful when using Windows workstation to administer Linux servers and when using multiple workstations.
+
+Notes:
+
+* Rocky Linux is chosen as base because most enterprise Linux servers use Red Hat based servers.
+* no systemd.
+* no graphical interface.
+
+The container is not meant as replacement of a workstation but to provide a helper tool that could be used when feasible.
+
+== Usage
+
+* Create directory where you want to put your own scripts, data, etc.
+** For example: `C:\HOME\work\development\admin-container\data`
+* Set environment variables in Dockerfile.
+** For example: 
+** OCP_VERSION=4.6.28
+* Modify Dockerfile, if required, to install new packages etc.
+* Build image:
+** `docker build -t admincontainer .`
+* Use image:
+** `docker run -it --rm -v C:\HOME\work\development\admin-container\data:/root/host --name admincontainer -h admincontainer -p 2022:22 admincontainer`
+** Options:
+*** Use _/root/host_ as directory inside container, configuration uses that directory.
+*** Use hostname _admincontainer_ (-h admincontainer), SSH key uses that host.
+*** Set SSH port using -p option.
+
+Environment variables when starting the container:
+
+* _DISABLE_SSHD=true_ - do not start ssh daemon.
+* _ROOT_PASSWORD=<any pwd>_ - set root password.
+* _DISPLAY=<X display>_ - set display for X (default is `host.docker.internal:0` for Windows hosts).
+** X server running on host is required.
+
+== Tools
+
+Container provides some tools and more can be added easily by modifying Dockerfile.
+
+* OpenShift/Kubernetes clients, oc and kubectl
+* https://github.com/samisalkosuo/kubeterminal[KubeTerminal]
+* Node.js
+* lynx and w3m - text based browsers
+* SSH daemon, so SSH client can be used to access the container.
+** root-user is used to access the container, root password is generated when container is started.
+* Tmux with https://github.com/gpakosz/.tmux and tmux-restore - remembers tmux windows between restarts.
+** Inside container get Tmux cheatsheet: `w3m https://tmuxcheatsheet.com/`
+* xclip - if you have X server, you can copy from container to host clipboard.
