@@ -4,8 +4,8 @@ __current_dir=$(pwd)
 
 #.tmux.git installed in home directory
 cd ~
-git clone https://github.com/gpakosz/.tmux.git && \
-    ln -s .tmux/.tmux.conf 
+git clone https://github.com/gpakosz/.tmux.git
+ln -s .tmux/.tmux.conf 
 cd $__current_dir
 
 #install kubeterminal
@@ -21,7 +21,7 @@ chmod 755 /usr/local/bin/kubeterminal.sh
 
 
 #install rain, for entertainment
-#clone, compile and delete source dir
+#clone and compile
 git clone https://github.com/samisalkosuo/ascii-rain.git
 cd ascii-rain
 gcc rain-no-c-check.c -o /usr/local/bin/rain -lncurses

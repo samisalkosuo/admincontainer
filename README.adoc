@@ -35,11 +35,11 @@ Environment variables when starting the container:
 Build your own version of admincontainer.
 
 * Modify Dockerfile, if required, to install new packages etc.
-* Set environment variables in Dockerfile.
+* Set your own environment variables in _Dockerfile_, _environment.sh_ and _shell.sh_.
 * Build image:
-** `docker build -t admincontainer .`
+** `docker build -t myadmin .`
 * Use image:
-** `docker run -it --rm -v C:\HOME\work\development\admincontainer:/root/host --name admincontainer -h admincontainer -p 2022:22 admincontainer`
+** `docker run -it --rm -v C:\HOME\work\development\admincontainer:/root/host --name admincontainer -h admincontainer -p 2022:22 myadmin`
 
 == Tools
 
