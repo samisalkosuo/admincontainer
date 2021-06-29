@@ -15,17 +15,11 @@ The container is not meant as replacement of a workstation but to provide a help
 == Usage
 
 * Create directory where you want to put your own scripts, data, etc.
-** For example: `C:\HOME\work\development\admin-container\data`
-* Set environment variables in Dockerfile.
-** For example: 
-** OCP_VERSION=4.6.28
-* Modify Dockerfile, if required, to install new packages etc.
-* Build image:
-** `docker build -t admincontainer .`
+** For example: `C:\HOME\work\development\admincontainer`
 * Use image:
-** `docker run -it --rm -v C:\HOME\work\development\admin-container\data:/root/host --name admincontainer -h admincontainer -p 2022:22 admincontainer`
+** `docker run -it --rm -v C:\HOME\work\development\admincontainer\:/root/host --name admincontainer -h admincontainer -p 2022:22 kazhar/admincontainer`
 ** Options:
-*** Use _/root/host_ as directory inside container, configuration uses that directory.
+*** Use _/root/host_ as directory inside container (-v </your/dir/>:/root/host), configuration uses that directory.
 *** Use hostname _admincontainer_ (-h admincontainer), SSH key uses that host.
 *** Set SSH port using -p option.
 
@@ -35,6 +29,17 @@ Environment variables when starting the container:
 * _ROOT_PASSWORD=<any pwd>_ - set root password.
 * _DISPLAY=<X display>_ - set display for X (default is `host.docker.internal:0` for Windows hosts).
 ** X server running on host is required.
+
+=== Build
+
+Build your own version of admincontainer.
+
+* Modify Dockerfile, if required, to install new packages etc.
+* Set environment variables in Dockerfile.
+* Build image:
+** `docker build -t admincontainer .`
+* Use image:
+** `docker run -it --rm -v C:\HOME\work\development\admincontainer:/root/host --name admincontainer -h admincontainer -p 2022:22 admincontainer`
 
 == Tools
 
