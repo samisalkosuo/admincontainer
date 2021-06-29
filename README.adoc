@@ -1,4 +1,4 @@
-= admin-container
+= admincontainer
 
 General purpose container mainly for admin purposes. The idea of this container is to provide a set of tools that can be used using Linux, Windows or Mac workstation without installing the tools natively. 
 
