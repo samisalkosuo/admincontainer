@@ -55,8 +55,8 @@ COPY setup_scripts/nodejs.sh .
 RUN sh nodejs.sh
 
 #install various tools from git sources
-COPY setup_scripts/tools_from_git.sh .
-RUN sh tools_from_git.sh
+COPY setup_scripts/tools.sh .
+RUN sh tools.sh
 
 #change workdir
 WORKDIR /root
@@ -68,6 +68,9 @@ RUN tmux new-session -d -s build && sleep 5 && tmux kill-session -t build
 
 #map this volume to host directory where you want your persistent data
 VOLUME ["/root/host"]
+
+#ports
+EXPOSE 22 3000
 
 COPY environment.sh .
 COPY shell.sh .

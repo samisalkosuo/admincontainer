@@ -21,14 +21,53 @@ The container is not meant as replacement of a workstation but to provide a help
 ** Options:
 *** Use _/root/host_ as directory inside container (-v </your/dir/>:/root/host), configuration uses that directory.
 *** Use hostname _admincontainer_ (-h admincontainer), SSH key uses that host.
-*** Set SSH port using -p option.
+*** Set ports using -p option.
 
-Environment variables when starting the container:
+.Environment variables when starting the container
+|===
+|Name|Value|Description
 
-* _DISABLE_SSHD=true_ - do not start ssh daemon.
-* _ROOT_PASSWORD=<any pwd>_ - set root password.
-* _DISPLAY=<X display>_ - set display for X (default is `host.docker.internal:0` for Windows hosts).
-** X server running on host is required.
+|DISABLE_SSHD
+|<any text>
+|Do not start ssh daemon.
+
+|ROOT_PASSWORD
+|<any pwd>
+|Set root password.
+
+|WRITE_ROOT_PASSWORD_TO_FILE
+|<any text>
+|Write root password to /root/root_pwd.txt.
+
+|DISPLAY
+|<X display>
+|Set display for X (default is `host.docker.internal:0` for Windows hosts).
+
+(X server running on host is required.)
+
+|START_WETTY_HTTP
+|<any text>
+|Start HTTP WeTTY server instead of bash-shell.
+
+|START_WETTY_HTTPS
+|<any text>
+|Start HTTPS WeTTY server instead of bash-shell.
+
+|===
+
+
+.Ports inside the container
+|===
+|Port|Description
+
+|22
+|SSH port, expose using for example `-p 2022:22`
+
+|3000
+|WeTTY port, expose using for example `-p 3000:3000`
+
+|===
+
 
 === Build
 
@@ -49,6 +88,7 @@ Container provides some tools and more can be added easily by modifying Dockerfi
 * https://github.com/samisalkosuo/kubeterminal[KubeTerminal]
 * Node.js
 * lynx and w3m - text based browsers
+* https://github.com/butlerx/wetty[WeTTY]
 * SSH daemon, so SSH client can be used to access the container.
 ** root-user is used to access the container, root password is generated when container is started.
 * Tmux with https://github.com/gpakosz/.tmux and tmux-restore - remembers tmux windows between restarts.
