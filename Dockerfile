@@ -1,28 +1,31 @@
 #admin docker file
 FROM rockylinux/rockylinux:8.4
 
-RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-#install openssh server in order to generate ssh key
-RUN dnf -y install --enablerepo=epel-testing openssh-server
-#generate ssh key 
-RUN ssh-keygen -b 2048 -t rsa -f /root/.ssh/id_rsa -q -N ""
-#change ssh key hostname to admincontainer
-RUN sed -i s/buildkitsandbox/admincontainer/g /root/.ssh/id_rsa.pub
-#set up sshd
-RUN ssh-keygen -A && rm -f /run/nologin
+#name of the container should be the name of the container host (-h admincontainer, when starting the container)
+ENV ADMIN_CONTAINER_NAME=admincontainer
+
+#install tools, libs, etc
+#from /root/setup_scripts directory
+#setup scripts for each "larger" component like SSH server and packages from repo
+#each .sh file from setup_scripts directory is copied and executed
+#one at a time so that builds are cached
+
+WORKDIR /root/setup_scripts
+
+#install ssh server
+COPY setup_scripts/ssh_server.sh .
+RUN sh ssh_server.sh
 
 #install development tools
-RUN dnf -y group install "Development Tools"
+COPY setup_scripts/development_tools.sh .
+RUN sh development_tools.sh
 
 #install helpful packages
-RUN dnf -y install --enablerepo=epel-testing --enablerepo=powertools \
-                    iputils python3 jq nmap httpd-tools curl wget net-tools \
-                    git openldap openldap-clients openldap-devel httpd \
-                    bind-utils dnsmasq haproxy procps-ng tmux sudo tree \
-                    openssl openssl-devel which redhat-indexhtml perl perl-NKF\
-                    gpm-libs ncurses* whois telnet ftp ncftp xclip xorg-x11-apps 
+COPY setup_scripts/install_packages.sh .
+RUN sh install_packages.sh
 
-#environment variables
+#environment variables used in build time
+#change these and build your own image
 ENV OCP_VERSION=4.6.28
 
 #DISPLAY env for Windows set as default
@@ -39,29 +42,21 @@ ENV DISPLAY=host.docker.internal:0
 #DISPLAY env in Linux, use "--net host" when starting the container
 #ENV DISPLAY=:0
 
-#install tools, libs, etc
-#from /root/setup directory
-WORKDIR /root/setup
-
-#copy each .sh file from setup directory
-#and execute them
-#one at a time so that builds are cached
-
 #install tools from rpms
-COPY setup/install_rpms.sh .
-RUN sh install_rpms.sh
+COPY setup_scripts/rpm_packages.sh .
+RUN sh rpm_packages.sh
 
 #install openshift clients
-COPY setup/install_openshift_clients.sh .
-RUN sh install_openshift_clients.sh
+COPY setup_scripts/openshift_clients.sh .
+RUN sh openshift_clients.sh
 
 #install node.js and node related tools
-COPY setup/install_nodejs.sh .
-RUN sh install_nodejs.sh
+COPY setup_scripts/nodejs.sh .
+RUN sh nodejs.sh
 
 #install various tools from git sources
-COPY setup/install_tools_from_git.sh .
-RUN sh install_tools_from_git.sh
+COPY setup_scripts/tools_from_git.sh .
+RUN sh tools_from_git.sh
 
 #change workdir
 WORKDIR /root
@@ -76,4 +71,5 @@ VOLUME ["/root/host"]
 
 COPY environment.sh .
 COPY shell.sh .
+
 CMD ["sh","/root/shell.sh"]

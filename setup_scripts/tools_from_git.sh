@@ -1,11 +1,11 @@
 #install tools from git
-
+set -e
 __current_dir=$(pwd)
 
 #.tmux.git installed in home directory
 cd ~
 git clone https://github.com/gpakosz/.tmux.git
-ln -s .tmux/.tmux.conf 
+ln -s -f .tmux/.tmux.conf 
 cd $__current_dir
 
 #install kubeterminal

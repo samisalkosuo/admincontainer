@@ -1,5 +1,6 @@
 #install openshift clients
 #version from OCP_VERSION env variable set in Dockerfile
+set -e 
 
 function downloadClients
 {

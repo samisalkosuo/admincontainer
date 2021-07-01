@@ -35,7 +35,7 @@ echo "root:$__rootpassword" | chpasswd
 
 __now=$(date)
 __hostname=$(hostname)
-__predefined_hostname=admincontainer
+__predefined_hostname=${ADMIN_CONTAINER_NAME}
 if [[ ! "$__hostname" == "${__predefined_hostname}" ]]; then
   __hostname="$__hostname (WARNING: host name should be '${__predefined_hostname}')"
 fi
@@ -47,4 +47,4 @@ echo "  $__sshd_status"
 if [[ "$__sshd_status" == "sshd started" ]]; then
   echo "  SSH root user pwd: $__rootpassword"
 fi
-exec /bin/bash
+exec /bin/bash -l
