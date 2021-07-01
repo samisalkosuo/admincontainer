@@ -1,10 +1,11 @@
-#start shell 
+#start script 
 
 source /root/environment.sh
 
 #create required config directories and other directories
 mkdir -p /root/host/config/tmux/
 mkdir -p /root/tmp
+source ~/.bash_profile
 
 #set environment variables in .bash_profile when starting the container
 #so they are accessible when using ssh to connect to container
@@ -12,7 +13,7 @@ echo "export OCP_VERSION=$OCP_VERSION" >> /root/.bash_profile
 echo "export DISPLAY=$DISPLAY" >> /root/.bash_profile
 cat environment.sh | grep -v "^#" >> /root/.bash_profile
 
-#start SSH daemon
+#start SSH daemon if not disabled
 __sshd_status=""
 if [[ -v DISABLE_SSHD ]]; then
   #DISABLE_SSHD exists, do not start sshd
@@ -47,4 +48,33 @@ echo "  $__sshd_status"
 if [[ "$__sshd_status" == "sshd started" ]]; then
   echo "  SSH root user pwd: $__rootpassword"
 fi
-exec /bin/bash -l
+
+__exec=shell
+
+if [[ -v START_WETTY_HTTP ]]; then
+   __exec=wetty_http
+fi
+
+if [[ -v START_WETTY_HTTPS ]]; then
+   __exec=wetty_https
+fi
+
+__wetty_port=3000
+
+case "$__exec" in
+    shell)
+        exec /bin/bash -l
+        ;;        
+    wetty_http)
+        #run with http
+        dumb-init wetty --host 0.0.0.0 --port ${__wetty_port} --title WeTTY --base /
+        ;;
+    wetty_https)
+        #run with https
+        dumb-init wetty --host 0.0.0.0 --port ${__wetty_port} --title WeTTY --base / --ssl-key ~/.ssl/wetty.key --ssl-cert ~/.ssl/wetty.crt
+        ;;
+    *)
+        echo "no exec"
+        exit 1
+        ;;
+esac
