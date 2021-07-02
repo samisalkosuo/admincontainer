@@ -5,13 +5,14 @@ source /root/environment.sh
 #create required config directories and other directories
 mkdir -p /root/host/config/tmux/
 mkdir -p /root/tmp
-source ~/.bash_profile
 
 #set environment variables in .bash_profile when starting the container
 #so they are accessible when using ssh to connect to container
 echo "export OCP_VERSION=$OCP_VERSION" >> /root/.bash_profile
 echo "export DISPLAY=$DISPLAY" >> /root/.bash_profile
 cat environment.sh | grep -v "^#" >> /root/.bash_profile
+
+source ~/.bash_profile
 
 #start SSH daemon if not disabled
 __sshd_status=""

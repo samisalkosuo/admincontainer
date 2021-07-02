@@ -94,3 +94,5 @@ Container provides some tools and more can be added easily by modifying Dockerfi
 * Tmux with https://github.com/gpakosz/.tmux and tmux-restore - remembers tmux windows between restarts.
 ** Inside container get Tmux cheatsheet: `w3m https://tmuxcheatsheet.com/`
 * xclip - if you have X server, you can copy from container to host clipboard.
+** https://sourceforge.net/projects/vcxsrv/[Windows X-Server], https://www.xquartz.org/[Mac X-Server]
+

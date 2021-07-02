@@ -35,5 +35,6 @@ dnf -y install --enablerepo=epel-testing --enablerepo=powertools \
                     ftp \
                     ncftp \
                     xclip \
-                    xorg-x11-apps 
+                    xorg-x11-apps \
+                    vim 
 
